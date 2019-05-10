@@ -101,7 +101,7 @@ public class TaskServiceImpl implements TaskService {
      * @throws Exception
      */
     @Override
-    public AjaxResult stopTask(String group, String name, Class clazz, String cron,int id) throws Exception {
+    public AjaxResult stopTask(String group, String name, Class clazz, String cron) throws Exception {
         //验证数据
         if(StringUtils.isEmpty(group)||StringUtils.isEmpty(name)
                 || StringUtils.isEmpty(cron) || clazz == null){
@@ -111,7 +111,6 @@ public class TaskServiceImpl implements TaskService {
         Map<String,String> map = new HashMap<>();
         map.put("group",group);
         map.put("name",name);
-
         //先查数据看，看看当前任务是否正在执行
         MyJob currentJob = taskMapper.selectTaskByNameAndGroup(map);
 
@@ -125,8 +124,7 @@ public class TaskServiceImpl implements TaskService {
 
                 //终止定时任务
                 scheduler.shutdown();
-
-                //将任务从数据库中删除
+                //将任务从数据库中删除(根据任务组名和任务名)
                 int i = taskMapper.deleteTask(map);
                 if(i > 0){
                     log.info("任务删除成功");
@@ -182,6 +180,7 @@ public class TaskServiceImpl implements TaskService {
 
                 //更新任务状态 0 --- 任务暂停
                 currentJob.setStatus("0");
+                //根据任务组名和任务名更新任务状态
                 int i = taskMapper.updateTaskStatus(currentJob);
                 if(i > 0){
                     log.info("任务状态更新成功");

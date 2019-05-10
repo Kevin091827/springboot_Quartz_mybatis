@@ -35,7 +35,7 @@ public interface TaskService {
      * @return
      * @throws Exception
      */
-    AjaxResult stopTask(String group, String name, Class clazz, String cron,int id) throws Exception;
+    AjaxResult stopTask(String group, String name, Class clazz, String cron) throws Exception;
 
     /**
      * 暂停任务
