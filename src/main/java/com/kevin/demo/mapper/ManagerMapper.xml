@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kevin.demo.mapper.TaskMapper">
+
+    <resultMap id="MyJob" type="com.kevin.demo.entity.MyJob">
+        <result	column="id" property="id"></result>
+        <result column="group" property="group"></result>
+        <result column="name" property="name"></result>
+        <result column="cron" property="cron"></result>
+        <result column="status" property="status"></result>
+        <result column="gmt_create" property="gmt_create"></result>
+        <result column="gmt_modify" property="gmt_modify"></result>
+    </resultMap>
+
+    <select id="selectTaskByStaus" parameterType="java.lang.String" resultMap="MyJob">
+
+    </select>
+
+
+    <select id="insertTask" parameterType="com.kevin.demo.entity.MyJob">
+
+    </select>
+
+    <select id="selectTaskByNameAndGroup" parameterType="java.util.Map">
+
+    </select>
+
+    <select id="selectAllJob" resultMap="MyJob">
+
+    </select>
+
+    <update id="updateTaskCron" parameterType="com.kevin.demo.entity.MyJob">
+
+    </update>
+
+    <update id="updateTaskStatus" parameterType="com.kevin.demo.entity.MyJob">
+
+    </update>
+
+    <update id="updateTaskInfo" parameterType="com.kevin.demo.entity.MyJob" >
+
+    </update>
+
+    <delete id="deleteTask" parameterType="java.lang.Integer">
+
+    </delete>
+
+</mapper>
