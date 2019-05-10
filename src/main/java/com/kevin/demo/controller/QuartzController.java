@@ -31,7 +31,7 @@ public class QuartzController {
 
     /*******************************************
      缺陷：
-            class:代表任务类，主要是任务需要执行的逻辑
+            xxx.class:代表任务类，主要是任务需要执行的逻辑
             先写死是ScheduleQuartz.class
             新增加任务话就修改
      ***************************************/
@@ -40,13 +40,12 @@ public class QuartzController {
      * 开启任务
      * @param group
      * @param name
-     * @param clazz
      * @param cron
      * @return
      * @throws Exception
      */
     @RequestMapping("/start")
-    public AjaxResult start(String group, String name, Class clazz, String cron) throws Exception {
+    public AjaxResult start(String group, String name, String cron) throws Exception {
         return taskService.startTask(group, name, ScheduleQuartzJob.class, cron);
     }
 
@@ -54,14 +53,13 @@ public class QuartzController {
      * 终止任务
      * @param group
      * @param name
-     * @param clazz
      * @param cron
      * @param id
      * @return
      * @throws Exception
      */
     @RequestMapping("/stop")
-    public AjaxResult stop(String group, String name, Class clazz, String cron,int id) throws Exception {
+    public AjaxResult stop(String group, String name, String cron,int id) throws Exception {
         return taskService.stopTask(group, name, ScheduleQuartzJob.class, cron,id);
     }
 
@@ -69,13 +67,12 @@ public class QuartzController {
      * 暂停任务
      * @param group
      * @param name
-     * @param clazz
      * @param cron
      * @return
      * @throws Exception
      */
     @RequestMapping("/pause")
-    public AjaxResult pause(String group, String name, Class clazz, String cron) throws Exception {
+    public AjaxResult pause(String group, String name, String cron) throws Exception {
         return taskService.pauseTask(group, name, ScheduleQuartzJob.class, cron);
     }
 
@@ -83,13 +80,12 @@ public class QuartzController {
      * 恢复任务
      * @param group
      * @param name
-     * @param clazz
      * @param cron
      * @return
      * @throws Exception
      */
     @RequestMapping("/resume")
-    public AjaxResult resume(String group, String name, Class clazz, String cron) throws Exception {
+    public AjaxResult resume(String group, String name, String cron) throws Exception {
         return taskService.resumeTask(group, name, ScheduleQuartzJob.class, cron);
     }
 
@@ -122,11 +118,10 @@ public class QuartzController {
     /**
      * 新增任务
      * @param myJob
-     * @param clazz
      * @return
      */
     @RequestMapping("/insertTask")
-    public AjaxResult insertTask(@ModelAttribute MyJob myJob,Class clazz){
+    public AjaxResult insertTask(@ModelAttribute MyJob myJob){
         return taskService.insertTask(myJob,ScheduleQuartzJob.class);
     }
 }
