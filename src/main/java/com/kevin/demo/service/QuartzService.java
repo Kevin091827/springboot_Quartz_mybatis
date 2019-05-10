@@ -14,7 +14,7 @@ import org.quartz.Scheduler;
 public interface QuartzService {
 
     /**
-     * 任务调度
+     * 任务调度（动态获取调度器）
      * @param group
      * @param name
      * @param clazz
