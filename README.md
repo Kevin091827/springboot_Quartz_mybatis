@@ -1,0 +1,2 @@
+# springboot_Quartz_mybatis
+springboot整合quartz实现定时任务的开启，关闭，暂停和恢复的一个小demo
