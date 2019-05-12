@@ -291,7 +291,7 @@ public class TaskServiceImpl implements TaskService {
      * @return
      */
     @Override
-    public AjaxResult updateCron(MyJob myJob) {
+    public AjaxResult updateCron(MyJob myJob) throws SchedulerException {
        //先查数据库中有无当前任务
         //封装参数
         Map<String,String> map = new HashMap<>();
@@ -299,6 +299,13 @@ public class TaskServiceImpl implements TaskService {
         map.put("name",myJob.getTaskName());
         MyJob curruntJob = taskMapper.selectTaskByNameAndGroup(map);
         if(curruntJob != null){
+            TriggerKey triggerKey = new TriggerKey(curruntJob.getTaskName(), curruntJob.getTaskGroup());
+            CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(myJob.getCron());
+            CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(myJob.getTaskName(), myJob.getTaskGroup())
+                    .withSchedule(cronScheduleBuilder).build();
+            Scheduler scheduler = new StdSchedulerFactory().getScheduler();
+            // 更新定时任务
+            scheduler.rescheduleJob(triggerKey, trigger);
             int i = taskMapper.updateTaskCron(myJob);
             if(i > 0){
                 return new AjaxResult().ok("任务频度更新成功");

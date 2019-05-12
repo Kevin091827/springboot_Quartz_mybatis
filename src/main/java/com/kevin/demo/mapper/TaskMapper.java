@@ -59,7 +59,7 @@ public interface TaskMapper {
      * @param myJob
      * @return
      */
-    int updateTaskCron(MyJob myJob);
+    int updateTaskCron(@Param("myJob") MyJob myJob);
 
     /**
      * 更新任务信息

@@ -6,6 +6,7 @@ import com.kevin.demo.service.QuartzService;
 import com.kevin.demo.service.TaskService;
 import com.kevin.demo.util.AjaxResult;
 import lombok.extern.slf4j.Slf4j;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -107,11 +108,10 @@ public class QuartzController {
      * @return
      */
     @RequestMapping("/updateCron")
-    public AjaxResult updateCron(int id ,String group, String name,String cron){
+    public AjaxResult updateCron(String group, String name,String cron) throws SchedulerException {
         MyJob myJob = new MyJob();
         myJob.setTaskGroup(group);
         myJob.setTaskName(name);
-        myJob.setId(id);
         myJob.setCron(cron);
         return taskService.updateCron(myJob);
     }

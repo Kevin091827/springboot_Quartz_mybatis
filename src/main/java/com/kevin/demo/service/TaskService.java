@@ -69,7 +69,7 @@ public interface TaskService {
      * @param myJob
      * @return
      */
-    AjaxResult updateCron(MyJob myJob);
+    AjaxResult updateCron(MyJob myJob) throws SchedulerException;
 
     /**
      * 新增任务
