@@ -142,7 +142,6 @@ public class TaskServiceImpl implements TaskService {
                 scheduler.unscheduleJob(triggerKey);
                 //终止定时任务
                 scheduler.deleteJob(jobKey);
-                scheduler.deleteJob(jobKey);
                 //将任务从数据库中删除(根据任务组名和任务名)
                 int i = taskMapper.deleteTask(map);
 
@@ -195,17 +194,20 @@ public class TaskServiceImpl implements TaskService {
 
                 JobKey jobKey = new JobKey(name, group);
                 //暂停任务
+                TriggerKey triggerKey = new TriggerKey(name, group);
+                // 停止触发器
+                scheduler.pauseTrigger(triggerKey);
                 scheduler.pauseJob(jobKey);
 
-                //更新任务状态 0 --- 任务暂停
-                currentJob.setStatus("0");
-                //根据任务组名和任务名更新任务状态
-                int i = taskMapper.updateTaskStatus(currentJob);
-                if(i > 0){
-                    log.info("任务状态更新成功");
-                }else {
-                    log.info("任务状态更新失败");
-                }
+//                //更新任务状态 0 --- 任务暂停
+//                currentJob.setStatus("0");
+//                //根据任务组名和任务名更新任务状态
+//                int i = taskMapper.updateTaskStatus(currentJob);
+//                if(i > 0){
+//                    log.info("任务状态更新成功");
+//                }else {
+//                    log.info("任务状态更新失败");
+//                }
                 return new AjaxResult().ok("定时任务已经暂停");
             }else{
                 return new AjaxResult().error("任务出错了");
@@ -250,17 +252,19 @@ public class TaskServiceImpl implements TaskService {
                 Scheduler scheduler = quartzService.startJob(group,name,clazz,cron);
 
                 JobKey jobKey = new JobKey(name, group);
-                //暂停任务
+                //恢复任务
+                TriggerKey triggerKey = new TriggerKey(name, group);
+                scheduler.resumeTrigger(triggerKey);
                 scheduler.resumeJob(jobKey);
 
-                //更新任务状态 1 --- 任务恢复
-                currentJob.setStatus("1");
-                int i = taskMapper.updateTaskStatus(currentJob);
-                if(i > 0){
-                    log.info("任务状态更新成功");
-                }else {
-                    log.info("任务状态更新失败");
-                }
+//                //更新任务状态 1 --- 任务恢复
+//                currentJob.setStatus("1");
+//                int i = taskMapper.updateTaskStatus(currentJob);
+//                if(i > 0){
+//                    log.info("任务状态更新成功");
+//                }else {
+//                    log.info("任务状态更新失败");
+//                }
                 return new AjaxResult().ok("定时任务已经恢复执行");
             }else{
                 return new AjaxResult().error("任务出错了");

@@ -52,6 +52,7 @@ public class QuartzController {
 
     /**
      * 终止任务
+     * TODO 每次任务能够终止下来，但是会出现相同触发器定义的错误，但是不影响程序的运行
      * @param group
      * @param name
      * @param cron

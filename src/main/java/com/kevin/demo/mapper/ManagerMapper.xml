@@ -29,7 +29,7 @@
     </select>
 
     <select id="selectAllJob" resultMap="MyJob">
-
+          select * from task_tb
     </select>
 
     <update id="updateTaskCron" parameterType="com.kevin.demo.entity.MyJob">
@@ -37,7 +37,7 @@
     </update>
 
     <update id="updateTaskStatus" parameterType="com.kevin.demo.entity.MyJob">
-          update task_tb set status = #{myJob.status} where name = #{myJob.name} and group = #{myJob.group}
+          update task_tb set status = #{myJob.status} where task_name = #{myJob.taskName}  and task_group = #{myJob.taskGroup}
     </update>
 
     <update id="updateTaskInfo" parameterType="com.kevin.demo.entity.MyJob" >
