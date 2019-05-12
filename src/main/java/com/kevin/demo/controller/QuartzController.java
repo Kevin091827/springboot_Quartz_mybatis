@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @ResponseBody
 @Slf4j
+@RequestMapping("/task")
 public class QuartzController {
 
     @Autowired
@@ -40,13 +42,12 @@ public class QuartzController {
      * 开启任务
      * @param group
      * @param name
-     * @param cron
      * @return
      * @throws Exception
      */
     @RequestMapping("/start")
-    public AjaxResult start(String group, String name, String cron) throws Exception {
-        return taskService.startTask(group, name, ScheduleQuartzJob.class, cron);
+    public AjaxResult start(String group, String name) throws Exception {
+        return taskService.startTask(group, name, ScheduleQuartzJob.class);
     }
 
     /**
@@ -54,13 +55,12 @@ public class QuartzController {
      * @param group
      * @param name
      * @param cron
-     * @param id
      * @return
      * @throws Exception
      */
     @RequestMapping("/stop")
-    public AjaxResult stop(String group, String name, String cron,int id) throws Exception {
-        return taskService.stopTask(group, name, ScheduleQuartzJob.class, cron,id);
+    public AjaxResult stop(String group, String name, String cron) throws Exception {
+        return taskService.stopTask(group, name, ScheduleQuartzJob.class, cron);
     }
 
     /**
@@ -108,8 +108,8 @@ public class QuartzController {
     @RequestMapping("/updateCron")
     public AjaxResult updateCron(int id ,String group, String name,String cron){
         MyJob myJob = new MyJob();
-        myJob.setGroup(group);
-        myJob.setName(name);
+        myJob.setTaskGroup(group);
+        myJob.setTaskName(name);
         myJob.setId(id);
         myJob.setCron(cron);
         return taskService.updateCron(myJob);
@@ -117,11 +117,21 @@ public class QuartzController {
 
     /**
      * 新增任务
-     * @param myJob
+     * @param group
+     * @param name
+     * @param cron
      * @return
      */
     @RequestMapping("/insertTask")
-    public AjaxResult insertTask(@ModelAttribute MyJob myJob){
+    public AjaxResult insertTask(@RequestParam("group")String group,
+                                 @RequestParam("name")String name,
+                                 @RequestParam("cron")String cron){
+        MyJob myJob = new MyJob();
+        myJob.setTaskGroup(group);
+        myJob.setTaskName(name);
+        myJob.setCron(cron);
+        //开启任务
+        myJob.setStatus("1");
         return taskService.insertTask(myJob,ScheduleQuartzJob.class);
     }
 }

@@ -23,9 +23,9 @@ public class MyJob implements Serializable {
     //任务id
     private int id;
     //任务组别
-    private String group;
+    private String taskGroup;
     //任务名字
-    private String name;
+    private String taskName;
     //cron表达式
     private String cron;
     //任务状态

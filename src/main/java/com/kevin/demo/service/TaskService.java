@@ -21,10 +21,9 @@ public interface TaskService {
      * @param group
      * @param name
      * @param clazz
-     * @param cron
      * @return
      */
-    AjaxResult startTask(String group, String name, Class clazz, String cron) throws Exception;
+    AjaxResult startTask(String group, String name, Class clazz) throws Exception;
 
     /**
      * 终止定时任务

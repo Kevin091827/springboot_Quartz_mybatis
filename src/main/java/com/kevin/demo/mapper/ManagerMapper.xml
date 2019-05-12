@@ -6,8 +6,8 @@
 
     <resultMap id="MyJob" type="com.kevin.demo.entity.MyJob">
         <result	column="id" property="id"></result>
-        <result column="group" property="group"></result>
-        <result column="name" property="name"></result>
+        <result column="task_group" property="taskGroup"></result>
+        <result column="task_name" property="taskName"></result>
         <result column="cron" property="cron"></result>
         <result column="status" property="status"></result>
         <result column="gmt_create" property="gmt_create"></result>
@@ -15,16 +15,17 @@
     </resultMap>
 
     <select id="selectTaskByStaus" parameterType="java.lang.String" resultMap="MyJob">
-
+            select * from task_tb where status = #{status}
     </select>
 
 
-    <select id="insertTask" parameterType="com.kevin.demo.entity.MyJob">
+    <insert id="insertTask" parameterType="com.kevin.demo.entity.MyJob">
+        insert into task_tb (task_group,task_name,cron,status,gmt_create,gmt_modify)
+          values (#{myJob.taskGroup} ,#{myJob.taskName} ,#{myJob.cron},#{myJob.status},#{myJob.gmt_create},#{myJob.gmt_modify})
+    </insert>
 
-    </select>
-
-    <select id="selectTaskByNameAndGroup" parameterType="java.util.Map">
-
+    <select id="selectTaskByNameAndGroup" parameterType="hashMap" resultMap="MyJob">
+        select * from task_tb where task_name = #{name} and task_group = #{group}
     </select>
 
     <select id="selectAllJob" resultMap="MyJob">
@@ -36,15 +37,15 @@
     </update>
 
     <update id="updateTaskStatus" parameterType="com.kevin.demo.entity.MyJob">
-
+          update task_tb set status = #{myJob.status} where name = #{myJob.name} and group = #{myJob.group}
     </update>
 
     <update id="updateTaskInfo" parameterType="com.kevin.demo.entity.MyJob" >
 
     </update>
 
-    <delete id="deleteTask" parameterType="java.lang.Integer">
-
+    <delete id="deleteTask" parameterType="map">
+          delete from task_tb where task_name = #{name} and task_group = #{group}
     </delete>
 
 </mapper>

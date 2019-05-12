@@ -38,7 +38,7 @@ public class QuartzServiceImpl implements QuartzService{
         //封装信息
         JobDataMap jobDataMap = new JobDataMap();
         jobDataMap.put("group",group);
-        jobDataMap.put("Name",name);
+        jobDataMap.put("name",name);
 
         //创建jobDetail
         JobDetail jobDetail = newJob(clazz)
