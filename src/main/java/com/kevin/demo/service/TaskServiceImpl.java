@@ -308,7 +308,6 @@ public class TaskServiceImpl implements TaskService {
             scheduler.rescheduleJob(triggerKey, trigger);
             int i = taskMapper.updateTaskCron(myJob);
             if(i > 0){
-
                 return new AjaxResult().ok("任务频度更新成功");
             }else{
                 return new AjaxResult().error("更新失败");
