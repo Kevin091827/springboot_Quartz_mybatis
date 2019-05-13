@@ -135,7 +135,7 @@ public class TaskServiceImpl implements TaskService {
                 //获取scheduler
                 Scheduler scheduler = quartzService.startJob(group,name,clazz,cron);
                 JobKey jobKey = new JobKey(name, group);
-                TriggerKey triggerKey = new TriggerKey(name, group);
+                TriggerKey triggerKey = new TriggerKey("triggerName"+name, "triggerGroup"+group);
                 // 停止触发器
                 scheduler.pauseTrigger(triggerKey);
                 //移除触发器
@@ -194,7 +194,7 @@ public class TaskServiceImpl implements TaskService {
 
                 JobKey jobKey = new JobKey(name, group);
                 //暂停任务
-                TriggerKey triggerKey = new TriggerKey(name, group);
+                TriggerKey triggerKey = new TriggerKey("triggerName"+name, "triggerGroup"+group);
                 // 停止触发器
                 scheduler.pauseTrigger(triggerKey);
                 scheduler.pauseJob(jobKey);
@@ -253,7 +253,7 @@ public class TaskServiceImpl implements TaskService {
 
                 JobKey jobKey = new JobKey(name, group);
                 //恢复任务
-                TriggerKey triggerKey = new TriggerKey(name, group);
+                TriggerKey triggerKey = new TriggerKey("triggerName"+name, "triggerGroup"+group);
                 scheduler.resumeTrigger(triggerKey);
                 scheduler.resumeJob(jobKey);
 
@@ -292,20 +292,24 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public AjaxResult updateCron(MyJob myJob) throws SchedulerException {
-       //先查数据库中有无当前任务
         //封装参数
         Map<String,String> map = new HashMap<>();
         map.put("group",myJob.getTaskGroup());
         map.put("name",myJob.getTaskName());
+        //先查数据库中有无当前任务
         MyJob curruntJob = taskMapper.selectTaskByNameAndGroup(map);
+        //存在当前任务则更新频度
         if(curruntJob != null){
-            TriggerKey triggerKey = new TriggerKey(curruntJob.getTaskName(), curruntJob.getTaskGroup());
+            //封装triggerKey
+            TriggerKey triggerKey = new TriggerKey("triggerName"+myJob.getTaskName(), "triggerGroup"+myJob.getTaskGroup());
             CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(myJob.getCron());
+            //重新封装获取触发器
             CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(myJob.getTaskName(), myJob.getTaskGroup())
                     .withSchedule(cronScheduleBuilder).build();
             Scheduler scheduler = new StdSchedulerFactory().getScheduler();
-            // 更新定时任务
+            // 更新定时任务频度
             scheduler.rescheduleJob(triggerKey, trigger);
+            //更新数据库
             int i = taskMapper.updateTaskCron(myJob);
             if(i > 0){
                 return new AjaxResult().ok("任务频度更新成功");

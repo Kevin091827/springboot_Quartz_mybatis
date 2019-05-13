@@ -1,5 +1,6 @@
 package com.kevin.demo.service;
 
+import com.kevin.demo.util.ArgsUtils;
 import com.kevin.demo.util.QuartzListener;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
@@ -46,11 +47,18 @@ public class QuartzServiceImpl implements QuartzService{
                 .build();
 
         //创建cronScheduleBuilder
-        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cron);
+        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder
+                .cronSchedule(cron)
+                .withMisfireHandlingInstructionDoNothing();//错过任务不处理
+
+
+        //构造触发器组名和别名
+        String triggerName = ArgsUtils.appendString("triggerName",name);
+        String triggerGroup = ArgsUtils.appendString("triggerGroup",group);
 
         //创建trigger
         CronTrigger cronTrigger = (CronTrigger) TriggerBuilder.newTrigger()
-                .withIdentity(name, group)
+                .withIdentity(triggerName, triggerGroup)
                 .withSchedule(cronScheduleBuilder)
                 .build();
 
@@ -70,4 +78,5 @@ public class QuartzServiceImpl implements QuartzService{
 
         return scheduler;
     }
+
 }
